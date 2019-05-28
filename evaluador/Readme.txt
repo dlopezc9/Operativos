@@ -1,0 +1,1 @@
+-- Este sera el README, aca ira todo el proceso de como se compila el programa y una explicacion general de este.
