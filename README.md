@@ -10,3 +10,5 @@ Para usar como referencia:
   
   https://github.com/catchorg/Clara
   A simple to use, composable, command line parser for C++ 11 and beyond
+  
+  https://github.com/fcardonaEAFIT/ProductorConsumidorProcesos/blob/master/initMemSem.cpp
