@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstdlib>
-<<<<<<< HEAD
 #include <string.h>
 #include <stdio.h>
 
@@ -9,11 +8,14 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 =======
+#include <string.h>
+#include <stdio.h>
 
 using namespace std;
 
-int main(int argc, char* argv[]){
->>>>>>> FULL REWORK
+int main(int argc, char* argv[])
+{
+>>>>>>> Pescando el error
 
   int i = 5;
   int ie, q = 6;
