@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+<<<<<<< HEAD
 #include <string.h>
 #include <stdio.h>
 
@@ -7,6 +8,12 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+=======
+
+using namespace std;
+
+int main(int argc, char* argv[]){
+>>>>>>> FULL REWORK
 
   int i = 5;
   int ie, q = 6;
