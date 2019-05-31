@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iterator>
 #include <algorithm>
+#include <bits/stdc++.h> 
 
 using namespace std;
 
@@ -15,7 +16,7 @@ int main(int argc, char* argv[])
   int oe = 10;
   int d = 100, b = 100, s = 100;
   string n = "evaluator";
-
+  vector<string> arguments{"-i", "-ie", "-oe", "-n", "-d", "-b", "-s", "-q"};
   
   if (argc == 1) {
     cout << "Insuficientes argumentos, porfavor intentar de nuevo";
@@ -26,8 +27,6 @@ int main(int argc, char* argv[])
     cout << "Falta comando init" << endl;
     return 1;
   }
-
-  string arguments[] = { "-i", "-ie", "-oe", "-n", "-d", "-b", "-s", "-q" };
 
   for (int x = 2; x < argc; ++x) {
 
@@ -41,16 +40,18 @@ int main(int argc, char* argv[])
       cout << "Argumento invalido" << endl;
       cout << "El argumento invalido es: " << argv[x] << endl;
       return 1;
+    } else {
+      arguments.erase(remove(begin(arguments), end(arguments), t_argument), end(arguments));
     }
-    
+	  
     if(!strcmp(argv[x],"-i")) {
-	    i = atoi(argv[x + 1]);
-	    ++x;
-	    
-	    if(i == 0){
-	        cout << "Valor no autorizado para i" << endl;
-	        return 1;
-	    }
+      i = atoi(argv[x + 1]);
+      ++x;
+    
+      if(i == 0){
+	cout << "Valor no autorizado para i" << endl;
+	return 1;
+      }
     }
 
     if(!strcmp(argv[x],"-ie")) {
@@ -118,6 +119,7 @@ int main(int argc, char* argv[])
 	        return 1;
 	    }
     }
+
   }
   
   cout <<  "Valor de i: " << i << endl;
