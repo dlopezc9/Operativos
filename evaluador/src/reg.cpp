@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 {
     bool listen = true;
 
-    if(strcmp(argv[i], "-n"))
+    if(strcmp(argv[1], "-n"))
     {
         cout << "No se especifica segmento de memoria" << endl;
         return 1;
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 
     cout << argc << endl;
 
-    if(argc == 4)
+    if(strcmp(argv[3], "-"))
     {
         string file_name(argv[3]);
         ifstream file(file_name);
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
         {
             cout << "No se puede abrir el archivo" << endl;
         } else {
-            count << "El archivo se abrio con exito" << endl;
+            cout << "El archivo se abrio con exito" << endl;
         }
 
         for(string line; getline(file, line); )
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
         
         cout << "Ingresando a modo interactivo" << endl;
         
-        string user_user;
+        string user_input;
 
         while(listen)
         {
