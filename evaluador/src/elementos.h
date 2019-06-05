@@ -1,4 +1,18 @@
 #pragma once
+#include <semaphore.h>
+
+
+struct header{
+  int i;
+  int ie;
+  int oe;
+  int q;
+  int b;
+  int d;
+  int s;
+  char n[30];
+};
+
 
 struct registroentrada {
   int bandeja;
@@ -9,4 +23,8 @@ struct registroentrada {
 
 // externo -> nombrado
 // interno -> anonimo
-struct registrosalida{};
+struct registrosalida{
+  int id;
+  char tipo;
+  int cantidad;
+};
