@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void Init::init(int i, int ie, int oe, string n, int b, int d, int s, int q){
+void Init::init(int i, int ie, int oe, char n[], int b, int d, int s, int q){
 
     //TODO EL PROCESO DE MEMORIA
 

@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     int oe = 10;
     int d = 100, b = 100, s = 100;
     bool listen = true;
-    string n = "evaluator";
+    const char* n = "evaluator";
     vector<string> arguments{"-i", "-ie", "-oe", "-n", "-d", "-b", "-s", "-q"};
 
     if(!strcmp(argv[1], "init"))
@@ -68,8 +68,11 @@ int main(int argc, char* argv[])
             }
 
             if(!strcmp(argv[x], "-n")) {
-                string temp(argv[x + 1]);
-                n = temp;
+                //string temp(argv[x + 1]);
+                //n = temp;
+
+                n = argv[x + 1];
+
                 ++x;
             }
 
@@ -115,7 +118,7 @@ int main(int argc, char* argv[])
         }
 
         Init init;
-        init.init(i, ie, oe, n, b, d, s, q);
+        init.init(i, ie, oe, (char*)n, b, d, s, q);
 
     } else if(!strcmp(argv[1], "reg")) {
 

@@ -12,5 +12,5 @@ using namespace std;
 
 class Init {
     public:
-        void init(int i, int ie, int oe, string n, int b, int d, int s, int q);
+        void init(int i, int ie, int oe, char n[], int b, int d, int s, int q);
 };
