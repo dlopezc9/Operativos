@@ -1,0 +1,24 @@
+1. Hay que averiguar bien, como se crean los threads.
+2. Si el comando INIT no ha sido lanzado, los otros no deben funcionar.
+3. Manejador de errores.
+
+COMANDOS:
+	INIT:	
+	a) Averiguar bien como se asignan espacios de memoria.
+	b) Usar switch case?
+	c) Crear casos donde hay que volver a pedir la linea de comando por si pasan las limitaciones
+
+	REG:
+	a) Como recibir un nombre local o ruta (Varia de alguna manera?)
+
+
+	CTRL:
+	a) Como se activan los sub comandos.
+	b) Averiguar como se hace  el update.
+	c) Averiguar BIEN:
+	   i) Elemento actual que esta siendo procesado por un thread. (Processing)
+	   ii) Elementos ya procesados por un thread. (Reported)
+	   iii) Elementos esperando a ser procesados (Waiting)
+
+	REP:
+	a)
