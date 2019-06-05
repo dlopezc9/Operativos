@@ -10,6 +10,6 @@ using namespace std;
 
 class Rep {
     public:
-        void mensajei(int segundos);
-        void mensajej(int examenes);
+        void mensajei(string nombre, int segundos);
+        void mensajej(string nombre, int examenes);
 };

@@ -8,13 +8,13 @@
 
 using namespace std;
 
-void Ctrl::update(string tipo, int carga)
+void Ctrl::update(string n, string tipo, int carga)
 {
 
   return;
 }
 
-void Ctrl::list(string subcomando){
+void Ctrl::list(string n, string subcomando){
 
   if(subcomando == "processing"){
     cout << "Eligio processing" << endl;

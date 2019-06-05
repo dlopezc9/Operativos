@@ -7,12 +7,12 @@
 
 using namespace std;
 
-void Rep::mensajei(int segundos){
+void Rep::mensajei(string memoria, int segundos){
 
   return;
 }
 
-void Rep::mensajej(int examenes){
+void Rep::mensajej(string memoria, int examenes){
 
   return;
 }

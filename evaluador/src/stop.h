@@ -4,13 +4,12 @@
 #include <cstdlib>
 #include <string.h>
 #include <stdio.h>
-#include <bits/stdc++.h>
 #include <fstream>
 #include <sstream>
 
 using namespace std;
 
-class Reg {
+class Stop {
     public:
-    void agregar(string n, int id, string tipo, int cantidad);
+    void stop(string n);
 };

@@ -5,11 +5,15 @@
 #include <iterator>
 #include <algorithm>
 #include <bits/stdc++.h>
+#include <algorithm>
+#include <vector> 
 #include "parser.h"
 #include "init.h"
 #include "reg.h"
 #include "ctrl.h"
 #include "rep.h"
+#include "stop.h"
+#include "memory_elements.h"
 
 using namespace std;
 
@@ -21,21 +25,22 @@ int main(int argc, char* argv[])
     int oe = 10;
     int d = 100, b = 100, s = 100;
     bool listen = true;
-    const char* n = "evaluator";
-    vector<string> arguments{"-i", "-ie", "-oe", "-n", "-d", "-b", "-s", "-q"};
+    string n = "evaluator";
+    vector<string> argumentos{"-i", "-ie", "-oe", "-n", "-d", "-b", "-s", "-q"};
 
     if(!strcmp(argv[1], "init"))
     {
 
         for (int x = 2; x < argc; ++x){
-        //    string t_argument(argv[x]);
-        //    bool exists find(begin(arguments), end(arguments), t_argument) != end(arguments);
+            string t_argument(argv[x]);
 
-        //    if (!exists){
-        //        cout << "Argumento invalido" << endl;
-        //        cout << "El argumento invalido es: " << argv[x] << endl;
-        //        return 1;
-        //    }
+            bool exists = find(begin(argumentos), end(argumentos), t_argument) != end(argumentos);
+
+            if (!exists){
+                cout << "Argumento invalido" << endl;
+                cout << "El argumento invalido es: " << argv[x] << endl;
+                return 1;
+            }
 
             if(!strcmp(argv[x], "-i")) {
                 i = stoi(argv[x + 1]);
@@ -68,10 +73,8 @@ int main(int argc, char* argv[])
             }
 
             if(!strcmp(argv[x], "-n")) {
-                //string temp(argv[x + 1]);
-                //n = temp;
-
-                n = argv[x + 1];
+                string temp(argv[x + 1]);
+                n = temp;
 
                 ++x;
             }
@@ -118,7 +121,7 @@ int main(int argc, char* argv[])
         }
 
         Init init;
-        init.init(i, ie, oe, (char*)n, b, d, s, q);
+        init.init(i, ie, oe, n, b, d, s, q);
 
     } else if(!strcmp(argv[1], "reg")) {
 
@@ -149,7 +152,7 @@ int main(int argc, char* argv[])
 
                 string *parsed_user_input = parser.parser(user_input);
 
-                reg.agregar(stoi(parsed_user_input[0]), parsed_user_input[1], stoi(parsed_user_input[2]));
+                reg.agregar(memory_name, stoi(parsed_user_input[0]), parsed_user_input[1], stoi(parsed_user_input[2]));
 
             }
 
@@ -170,7 +173,7 @@ int main(int argc, char* argv[])
 
                 string *args = parser.parser(line);
 
-                reg.agregar(stoi(args[0]), args[1], stoi(args[2]));            
+                reg.agregar(memory_name, stoi(args[0]), args[1], stoi(args[2]));            
 
             }
         }
@@ -189,13 +192,13 @@ int main(int argc, char* argv[])
             string *second_input = parser.parser(command);
 
             if(second_input[0] == "list"){
-                ctrl.list(second_input[1]);
+                ctrl.list(memory_space, second_input[1]);
 
             } else if(second_input[0] == "update"){
                 string tipo = second_input[1];
                 valor = stoi(second_input[2].c_str());
 
-                ctrl.update(tipo, valor);
+                ctrl.update(memory_space, tipo, valor);
             } 
         }
 
@@ -205,12 +208,19 @@ int main(int argc, char* argv[])
         string memory_space(argv[3]);
 
         if(!strcmp(argv[4], "-i")){
-            rep.mensajei(stoi(argv[5]));
+            rep.mensajei(memory_space, stoi(argv[5]));
 
-        } else if(!strcmp(argv[1], "-m")){
-            rep.mensajej(stoi(argv[5]));
+        } else if(!strcmp(argv[4], "-m")){
+            rep.mensajej(memory_space, stoi(argv[5]));
 
         }
+    } else if(!strcmp(argv[1], "stop")){
+        
+        Stop stop;
+        string memory_space(argv[3]);
+
+        stop.stop(memory_space);
+
     }
 
 
