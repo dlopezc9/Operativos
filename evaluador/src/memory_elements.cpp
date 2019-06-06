@@ -10,15 +10,16 @@
 
 using namespace std;
 
-char* abrir_memoria(string n) 
+char* Memory_Elements::abrir_memoria(string n) 
 {
+    // Hace el ajuste en el string para poder acceder al espacio de memoria y abre la memoria.
     n = "/" + n;
     int fd = shm_open(n.c_str(), O_RDWR, 0660);
 
+    // Localiza error.
     if (fd < 0) 
     {
-        cerr << "Error abriendo la memoria compartida: 4"
-	    << errno << strerror(errno) << endl;
+        cerr << "Error abriendo la memoria compartida: 4" << errno << strerror(errno) << endl;
         exit(1);
     }
 
@@ -31,6 +32,7 @@ char* abrir_memoria(string n)
            exit(1);
     }
 
+    // Toma los elementos del header.
     struct header *pHeader = (struct header *) dir;
   
     int i  = pHeader->i;
@@ -38,6 +40,7 @@ char* abrir_memoria(string n)
     int oe = pHeader->oe;
     int q  = pHeader->q;
 
+    // Hace remapeo a toda la memoria.
     munmap((void *) pHeader, sizeof(struct header));
     size_t memorysize = sizeof(struct header) + (sizeof(struct registroentrada)* i * ie) + (sizeof(struct registrosalida) * oe);
 
@@ -47,5 +50,6 @@ char* abrir_memoria(string n)
         exit(1);
     }
 
+    // Retorna la posicion inicial de la memoria.
     return dir;
 }

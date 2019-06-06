@@ -157,7 +157,8 @@ int main(int argc, char* argv[])
 
         if(!strcmp(argv[2], "-n"))
         {
-            string memory_name(argv[3]);
+            string temp(argv[3]);
+            memory_name = temp;
         } else {
             cout << "Variable invalida" << endl;
             return 1;
@@ -230,7 +231,8 @@ int main(int argc, char* argv[])
 
         if(!strcmp(argv[2], "-n"))
         {
-            string memory_name(argv[3]);
+            string temp(argv[3]);
+            memory_name = temp;
         } else {
             cout << "Variable invalida" << endl;
             return 1;
@@ -268,7 +270,8 @@ int main(int argc, char* argv[])
 
         if(!strcmp(argv[2], "-n"))
         {
-            string memory_name(argv[3]);
+            string temp(argv[3]);
+            memory_name = temp;
         } else {
             cout << "Variable invalida" << endl;
             return 1;
@@ -291,7 +294,9 @@ int main(int argc, char* argv[])
         Stop stop;
         if(!strcmp(argv[2], "-n"))
         {
-            string memory_name(argv[3]);
+            string temp(argv[3]);
+            memory_name = temp;
+
         } else {
             cout << "Variable invalida" << endl;
             return 1;

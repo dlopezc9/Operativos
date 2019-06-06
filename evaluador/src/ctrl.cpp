@@ -5,15 +5,24 @@
 #include <fstream>
 #include <sstream>
 #include "ctrl.h"
+#include "memory_elements.h"
 
 using namespace std;
 
+// Metodo que hace update a los datos,
+// n = nombre de la memoria
+// tipo = {B|D|S}
+// carga = la carga a potenciar
 void Ctrl::update(string n, string tipo, int carga)
 {
 
   return;
 }
 
+
+// Metodo que genera los reportes
+// n = nombre de la memoria
+// subcomando = subcomando deseado
 void Ctrl::list(string n, string subcomando){
 
   if(subcomando == "processing"){

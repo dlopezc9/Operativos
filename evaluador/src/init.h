@@ -1,12 +1,5 @@
 #pragma once
-
-#include <iostream>
-#include <cstdlib>
 #include <string.h>
-#include <stdio.h>
-#include <iterator>
-#include <algorithm>
-#include <bits/stdc++.h>
 
 using namespace std;
 
