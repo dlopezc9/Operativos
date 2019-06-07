@@ -34,7 +34,7 @@ int Manejador_Mem::crear_mem(int i, int ie, int oe, string n, int b, int d, int 
         exit(1);
     }
 
-    if (ftruncate(fd, sizeof(struct header) != 0) ) 
+    if (ftruncate(fd, sizeof(header) != 0) ) 
     {
         cerr << "Error creando la memoria compartida: 2"
 	    << errno << strerror(errno) << endl;
@@ -43,7 +43,7 @@ int Manejador_Mem::crear_mem(int i, int ie, int oe, string n, int b, int d, int 
 
     // Mapea la memoria compartida.
     char *dir;
-    if ((dir = (char*) mmap(NULL, sizeof(struct header) , PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
+    if ((dir = (char*) mmap(NULL, sizeof(header) , PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) 
     {
         cerr << "Error mapeando la memoria compartida: 3"
 	    << errno << strerror(errno) << endl;
@@ -51,7 +51,7 @@ int Manejador_Mem::crear_mem(int i, int ie, int oe, string n, int b, int d, int 
     }
   
     // Se crea el header y se asignan sus variables.
-    struct header *pHeader = (struct header *) dir;
+    header *pHeader = (header *) dir;
   
     pHeader->i = i;
     pHeader->ie = ie;
@@ -82,7 +82,7 @@ char* Manejador_Mem::abrir_memoria(string n)
 
     char *dir;
   
-    if ((dir = (char *)(mmap(NULL, sizeof(struct header), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0))) == MAP_FAILED)
+    if ((dir = (char *)(mmap(NULL, sizeof(header), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0))) == MAP_FAILED)
     {
       cerr << "Error mapeando la memoria compartida: 5"
 	         << errno << strerror(errno) << endl;
@@ -90,7 +90,7 @@ char* Manejador_Mem::abrir_memoria(string n)
     }
 
     // Toma los elementos del header.
-    struct header *pHeader = (struct header *) dir;
+    header *pHeader = (header *) dir;
   
     int i  = pHeader->i;
     int ie = pHeader->ie;
@@ -98,8 +98,8 @@ char* Manejador_Mem::abrir_memoria(string n)
     int q  = pHeader->q;
 
     // Hace remapeo a toda la memoria.
-    munmap((void *) pHeader, sizeof(struct header));
-    size_t memorysize = sizeof(struct header) + (sizeof(struct registroentrada)* i * ie) + (sizeof(struct registrosalida) * oe);
+    munmap((void *) pHeader, sizeof(header));
+    size_t memorysize = sizeof(header) + (sizeof(registroentrada)* i * ie) + (sizeof(registrosalida) * oe);
 
     if ((dir = (char *)(mmap(NULL, memorysize, PROT_READ | PROT_WRITE, MAP_SHARED,fd, 0))) == MAP_FAILED) 
     {
@@ -131,7 +131,7 @@ registrosalida Manejador_Mem::retirar_reg(int bandeja, string n)
     char *dir = abrir_memoria(n);
     bool insertado = false;
 
-    struct header *pHeader = (struct header *)dir;
+    header *pHeader = (header *)dir;
 
     int i = pHeader->i;
     int ie = pHeader->ie;
@@ -144,10 +144,10 @@ registrosalida Manejador_Mem::retirar_reg(int bandeja, string n)
     string s = to_string(posSem);
 
     // posición inicial de la bandeja i
-    char *pos = (bandeja * ie * sizeof(registroentrada)) + dir + sizeof(struct header);
+    char *pos = (bandeja * ie * sizeof(registroentrada)) + dir + sizeof(header);
 
     //Crear el registro de salida que devolver
-    struct registrosalida registro;
+    registrosalida registro;
 
     //hasta que no logre insertar intentar
     // Espera la semaforo para insertar, vacio para saber si hay cupo y el mutex
@@ -159,7 +159,7 @@ registrosalida Manejador_Mem::retirar_reg(int bandeja, string n)
     {
         //posición en la bandeja
         char *posn = (pos + (recorrido * sizeof(registroentrada)));
-        struct registroentrada *pRegistro = (struct registroentrada *)posn;
+        struct registroentrada *pRegistro = (registroentrada *)posn;
 
         //si encuentro elemento a retirar
         if (pRegistro->cantidad > 0)

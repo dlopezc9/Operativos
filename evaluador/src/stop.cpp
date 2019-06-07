@@ -17,7 +17,7 @@ void Stop::stop(string n)
   Manejador_Mem man_mem;
   
   char *dir = man_mem.abrir_memoria(n);
-  struct header *pHeader = (struct header *)dir;
+  header *pHeader = (header *)dir;
 
   int i = pHeader->i;
 

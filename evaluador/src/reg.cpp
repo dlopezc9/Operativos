@@ -17,7 +17,7 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
     Elements mem_el;
     Manejador_Mem man_mem;
 
-    struct registroentrada nuevo_reg;
+    registroentrada nuevo_reg;
     bool ciclar = true;
     bool repetido;
     int id;
@@ -52,7 +52,7 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
     char *dir = man_mem.abrir_memoria(n);
     bool insertado = false;
 
-    struct header *pHeader = (struct header *)dir;
+    header *pHeader = (header *)dir;
 
     int i  = pHeader->i;
     int ie = pHeader->ie;
@@ -66,7 +66,7 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
     string s = to_string(posSem);
 
     // posición inicial de la bandeja i
-    char *pos = (nuevo_reg.bandeja * ie * sizeof(registroentrada)) + dir + sizeof(struct header);
+    char *pos = (nuevo_reg.bandeja * ie * sizeof(registroentrada)) + dir + sizeof(header);
 
     //hasta que no logre insertar intentar
     // Espera la semaforo para insertar, vacio para saber si hay cupo y el mutex
@@ -78,7 +78,7 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
     {
         //posición en la bandeja
         char *posn = (pos + (recorrido * sizeof(registroentrada)));
-        struct registroentrada *pRegistro = (struct registroentrada *)posn;
+        registroentrada *pRegistro = (registroentrada *)posn;
 
         //si logra insertar se sale
         if (pRegistro->cantidad <= 0)
@@ -99,5 +99,36 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
  
 
     return id_existentes;
+}
+
+int Reg::recorrer(string nombre)
+{
+  int temp1 = 0;
+  int temp2 = 0;
+    Manejador_Mem man_mem;
+
+  // posición inicial
+  char *dir = man_mem.abrir_memoria(nombre);
+  bool insertado = false;
+  struct header *pHeader = (struct header *)dir;
+
+  int i = pHeader->i;
+  int ie = pHeader->ie;
+  int oe = pHeader->oe;
+
+  while (temp1 < i)
+  {
+    char *pos = (temp1 * ie * sizeof(registroentrada)) + dir + sizeof(struct header);
+    while (temp2 < ie)
+    {
+      char *posn = (pos + (temp2 * sizeof(registroentrada)));
+      struct registroentrada *pRegistro = (struct registroentrada *)posn;
+      cout << pRegistro->id << pRegistro->tipo << pRegistro->cantidad << endl;
+      temp2++;
+    }
+    temp1++;
+    temp2 = 0;
+  }
+  return 0;
 }
 

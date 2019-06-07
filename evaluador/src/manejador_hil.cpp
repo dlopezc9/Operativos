@@ -18,58 +18,50 @@ using namespace std;
 void* procesador(void *bandej)
 {
     Manejador_Mem man_mem;
+    banNam *producto = (banNam *)bandej;
+    int num_bandeja = producto->bandeja;
+    string nom_bandeja = producto->nombre;
 
     for (;;)
-    // for(int k = 0; k < 5; ++k)
     {
-        cout << "almenos una" << endl;
-        banNam *producto = (struct banNam *)bandej;
+        registrosalida registro = man_mem.retirar_reg(num_bandeja, nom_bandeja);
 
-        cout << "almenos dos?" << endl;
-        //printf("%d\n", producto -> bandeja);
-        //cout << producto->name << "\n" << endl;
-        registrosalida registro = man_mem.retirar_reg(producto->bandeja, producto->nombre);
-
-        cout << "tres?" << endl;
         // insertarRegistroSalida(registrosalida, nombre)
 
     }
+
+    cout << "Sali?" << endl;
  
     pthread_exit(NULL);
 }
 
 void Manejador_Hil::crear_hil(int i, string n){
     
-
-    cout << "Mira perro, si entre" << endl;
-    cout << i << endl;
     // Instancia los elementos que van a hacer parte de los hilos
     // Instancia el arreglo de los hilos.
     pthread_t hiloP[i];
     banNam bande;
-    bande.bandeja = i;
     bande.nombre = n;
     string n_Hilo = "Hilo" + n;
 
     // Crea los hilos y les asigna la funcion
-    for (int n = 0; n < i; n++)
+    for (int m = 0; m < i; ++m)
     {
+        bande.bandeja = m;
         ostringstream namellen;
-        namellen << n_Hilo << n;
+        namellen << n_Hilo << m;
         string realNameLlen(namellen.str());
-        pthread_create(&hiloP[n], NULL, procesador, (void *)&bande);
+        pthread_create(&hiloP[m], NULL, procesador, (void *)&bande);
+        sleep(0.1);
         
     }
 
-    cout << "WAIT WTF" << endl; 
-
+    //ESTO SE BORRA, SE DEJA AHORA POR DEBUGGER
     if (pthread_join(hiloP[0], NULL))
     {
-        cout << "Mira perro, PELIGRO" << endl;
         fprintf(stderr, "Error joining thread\n");
         return;
     }
 
-    cout << "AHA, SALI" << endl;
     return;
 }
