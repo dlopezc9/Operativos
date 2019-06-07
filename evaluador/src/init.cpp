@@ -11,6 +11,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <semaphore.h>
+#include <pthread.h>
+#include <cerrno>
 #include "init.h"   
 #include "memory_elements.h"
 
@@ -138,7 +140,32 @@ int Init::init(int i, int ie, int oe, string n, int b, int d, int s, int q){
     cout << "Se crearon los semaforos con exito" << endl;
 
 
-    //INICIAR HILOS
+    // Inicia los hilos
+
+    // Instancia los elementos que van a hacer parte de los hilos
+    // Instancia el arreglo de los hilos.
+    pthread_t hiloP[i];
+    struct banNam bande;
+    bande.bandeja = i;
+    bande.nombre = n;
+    string n_Hilo = "Hilo" + n;
+
+    // Crea los hilos y les asigna la funcion
+    for (int n = 0; n < i; n++)
+    {
+        ostringstream namellen;
+        namellen << n_Hilo << n;
+        string realNameLlen(namellen.str());
+        pthread_create(&hiloP[n], NULL, procesador, (void *)&bande); //DEFINIR QUE HACER CON LA ESTRUCTURA DEL PROGRAMA
+    }
+
+    if (pthread_join(hiloP[0], NULL))
+    {
+        fprintf(stderr, "Error joining thread\n");
+        return 2;
+    }
+
+    cout << "Hilos instanciados con exito" << endl;
 
     //    while(true)
     //    {

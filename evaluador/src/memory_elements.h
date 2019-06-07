@@ -7,6 +7,7 @@ using namespace std;
 class Memory_Elements {
     public:
     char* abrir_memoria(string n);
+    int generar_id();
 };
 
 struct header {

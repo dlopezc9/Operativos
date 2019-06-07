@@ -53,3 +53,9 @@ char* Memory_Elements::abrir_memoria(string n)
     // Retorna la posicion inicial de la memoria.
     return dir;
 }
+
+int Memory_Elements::generar_id() 
+{
+    int id = rand() % 10000;
+    return id;
+}

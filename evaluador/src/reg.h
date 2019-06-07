@@ -12,5 +12,5 @@ using namespace std;
 
 class Reg {
     public:
-    void agregar(string n, int id, string tipo, int cantidad);
+    vector<int> agregar(string n, int bandeja, string tipo, int cantidad, vector<int> id_existentes);
 };

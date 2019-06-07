@@ -13,10 +13,6 @@ using namespace std;
 void Stop::stop(string n)
 {
   Memory_Elements mem_ele;
-
-  cout << "Voy a borrar el espacio de memoria llamado..." << endl;
-  cout << n << endl;
-  cout << "Me pase eso por la galleta 4Head" << endl;
   
   char *dir = mem_ele.abrir_memoria(n);
   struct header *pHeader = (struct header *)dir;
@@ -54,7 +50,7 @@ void Stop::stop(string n)
     sem_unlink(realNameVac.c_str());
   }
 
-//  cout << "Cerrando memoria " << n << endl;
+  cout << "Cerrando memoria " << n << endl;
 
   return;
 }
