@@ -101,7 +101,7 @@ char* Manejador_Mem::abrir_memoria(string n)
     munmap((void *) pHeader, sizeof(header));
     size_t memorysize = sizeof(header) + (sizeof(registroentrada)* i * ie) + (sizeof(registrosalida) * oe);
 
-    if ((dir = (char *)(mmap(NULL, memorysize, PROT_READ | PROT_WRITE, MAP_SHARED,fd, 0))) == MAP_FAILED) 
+    if ((dir = (char *)(mmap(NULL, memorysize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0))) == MAP_FAILED) 
     {
         cerr << "Error mapeando la memoria compartida: 6" << errno << strerror(errno) << endl;
         exit(1);
@@ -159,7 +159,7 @@ registrosalida Manejador_Mem::retirar_reg(int bandeja, string n)
     {
         //posición en la bandeja
         char *posn = (pos + (recorrido * sizeof(registroentrada)));
-        struct registroentrada *pRegistro = (registroentrada *)posn;
+        registroentrada *pRegistro = (registroentrada *)posn;
 
         //si encuentro elemento a retirar
         if (pRegistro->cantidad > 0)
@@ -191,3 +191,144 @@ registrosalida Manejador_Mem::retirar_reg(int bandeja, string n)
 
   return registro;
 }
+
+
+int Manejador_Mem::recorrer_mem(string n)
+{
+  int temp1 = 0;
+  int temp2 = 0;
+  Manejador_Mem man_mem;
+
+  // posición inicial
+  char *dir = man_mem.abrir_memoria(n);
+  header *pHeader = (header *)dir;
+
+  int i = pHeader->i;
+  int ie = pHeader->ie;
+  int oe = pHeader->oe;
+
+  while (temp1 < i)
+  {
+    char *pos = (temp1 * ie * sizeof(registroentrada)) + dir + sizeof(struct header);
+    while (temp2 < ie)
+    {
+      char *posn = (pos + (temp2 * sizeof(registroentrada)));
+      struct registroentrada *pRegistro = (struct registroentrada *)posn;
+      cout << pRegistro->id << pRegistro->tipo << pRegistro->cantidad << endl;
+      temp2++;
+    }
+    temp1++;
+    temp2 = 0;
+  }
+  return 0;
+}
+
+int Manejador_Mem::crear_memQ(string n)
+{
+    Manejador_Mem man_mem;
+
+    //accede a la memoria compartida
+    // posición inicial
+    char *dir = man_mem.abrir_memoria(n);
+    header *pHeader = (header *)dir;
+    int q = pHeader->q;
+
+    // Abrir espacio de memoria para usar, usando el nombre n
+    n = n + "Q";
+
+    int fd = shm_open(n.c_str(), O_RDWR | O_CREAT | O_EXCL, 0660);
+    if (fd < 0)
+    {
+        cerr << "Error creando la memoria compartida: Q1"
+             << errno << strerror(errno) << endl;
+        exit(1);
+    }
+
+    if (ftruncate(fd, sizeof(headerQ) != 0))
+    {
+        cerr << "Error creando la memoria compartida: Q2"
+             << errno << strerror(errno) << endl;
+        exit(1);
+    }
+    char *dirQ;
+
+    if ((dirQ = (char *)mmap(NULL, sizeof(headerQ), PROT_READ | PROT_WRITE, MAP_SHARED,fd, 0)) == MAP_FAILED)
+    {
+        cerr << "Error mapeando la memoria compartida: Q3"
+             << errno << strerror(errno) << endl;
+        exit(1);
+    }
+
+    headerQ *pHeaderQ = (headerQ *)dirQ;
+    pHeaderQ->q = q;
+
+    close(fd);
+    return EXIT_SUCCESS;
+}
+
+
+char * Manejador_Mem::abrir_memoriaQ(string n)
+{
+    n = "/" + n + "Q";
+    int fd = shm_open(n.c_str(), O_RDWR, 0660);
+    if (fd < 0)
+    {
+        cerr << "Error abriendo la memoria compartida: Q4"
+             << errno << strerror(errno) << endl;
+        exit(1);
+    }
+
+    char *dir;
+
+    if ((dir = (char *)(mmap(NULL, sizeof(headerQ), PROT_READ | PROT_WRITE, MAP_SHARED,fd, 0))) == MAP_FAILED)
+    {
+        cerr << "Error mapeando la memoria compartida: Q5"
+             << errno << strerror(errno) << endl;
+        exit(1);
+    }
+
+    headerQ *pHeaderQ = (headerQ *)dir;
+    int q = pHeaderQ->q;
+
+    munmap((void *)pHeaderQ, sizeof(headerQ));
+    size_t memorysize = sizeof(headerQ) + (sizeof(registrosalida) * q * 3);
+
+    if ((dir = (char *)(mmap(NULL, memorysize, PROT_READ | PROT_WRITE, MAP_SHARED,fd, 0))) == MAP_FAILED)
+    {
+        cerr << "Error mapeando la memoria compartida: Q6"
+             << errno << strerror(errno) << endl;
+        exit(1);
+    }
+    return dir;
+}
+
+
+int Manejador_Mem::recorrerQ(string n)
+{   
+
+    int temp1 = 0;
+    int temp2 = 0;
+    int recorrido = 0;
+
+    // posición inicial
+    char *dire = abrir_memoriaQ(n);
+    headerQ *pHeaderQ = (headerQ *)dire;
+    int q = pHeaderQ->q;
+
+    while (recorrido < 3)
+    {
+        char *pos = dire + sizeof(struct headerQ) + (recorrido * sizeof(registrosalida) * q);
+        
+        while(temp2 < q ){
+        char *posn = pos + (temp2 * sizeof(registrosalida));
+        registrosalida *pRegistroSalida = (registrosalida *)posn;
+        cout << pRegistroSalida->id << pRegistroSalida->tipo << pRegistroSalida->cantidad << endl;
+        temp2++;
+        }
+        
+        recorrido++;
+        temp2 = 0;
+    }
+    return 0;
+}
+

@@ -20,6 +20,9 @@ struct header {
    int q;
 };
 
+struct headerQ {
+  int q;
+};
 
 struct registroentrada {
   int bandeja;

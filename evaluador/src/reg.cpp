@@ -97,38 +97,5 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
         }
     }
  
-
     return id_existentes;
 }
-
-int Reg::recorrer(string nombre)
-{
-  int temp1 = 0;
-  int temp2 = 0;
-    Manejador_Mem man_mem;
-
-  // posición inicial
-  char *dir = man_mem.abrir_memoria(nombre);
-  bool insertado = false;
-  struct header *pHeader = (struct header *)dir;
-
-  int i = pHeader->i;
-  int ie = pHeader->ie;
-  int oe = pHeader->oe;
-
-  while (temp1 < i)
-  {
-    char *pos = (temp1 * ie * sizeof(registroentrada)) + dir + sizeof(struct header);
-    while (temp2 < ie)
-    {
-      char *posn = (pos + (temp2 * sizeof(registroentrada)));
-      struct registroentrada *pRegistro = (struct registroentrada *)posn;
-      cout << pRegistro->id << pRegistro->tipo << pRegistro->cantidad << endl;
-      temp2++;
-    }
-    temp1++;
-    temp2 = 0;
-  }
-  return 0;
-}
-

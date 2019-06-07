@@ -188,8 +188,7 @@ int main(int argc, char* argv[])
                 string *parsed_user_input = parser.parser(user_input);
 
                 // Se llama al metodo agregar para ingresar en la memoria el registro.
-                id_existentes =reg.agregar(memory_name, stoi(parsed_user_input[0]), parsed_user_input[1], stoi(parsed_user_input[2]), id_existentes);
-                //int dio = reg.recorrer(memory_name);
+                id_existentes = reg.agregar(memory_name, stoi(parsed_user_input[0]), parsed_user_input[1], stoi(parsed_user_input[2]), id_existentes);
 
             }
 
