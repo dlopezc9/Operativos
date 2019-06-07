@@ -6,15 +6,17 @@
 #include <cstring>
 #include <semaphore.h>
 #include "stop.h"
-#include "memory_elements.h"
+#include "elements.h"
+#include "manejador_mem.h"
 
 using namespace std;
 
 void Stop::stop(string n)
 {
-  Memory_Elements mem_ele;
+  Elements mem_ele;
+  Manejador_Mem man_mem;
   
-  char *dir = mem_ele.abrir_memoria(n);
+  char *dir = man_mem.abrir_memoria(n);
   struct header *pHeader = (struct header *)dir;
 
   int i = pHeader->i;

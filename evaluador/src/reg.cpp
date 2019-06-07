@@ -7,13 +7,16 @@
 #include <sstream>
 #include <semaphore.h>
 #include "reg.h"
-#include "memory_elements.h"
+#include "elements.h"
+#include "manejador_mem.h"
 
 using namespace std;
 
 vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vector<int> id_existentes)
 {
-    Memory_Elements mem_el;
+    Elements mem_el;
+    Manejador_Mem man_mem;
+
     struct registroentrada nuevo_reg;
     bool ciclar = true;
     bool repetido;
@@ -31,7 +34,7 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
     }
     
     nuevo_reg.id = id;
-    strcpy(nuevo_reg.tipo, tipo.c_str());
+    nuevo_reg.tipo = tipo[0];
     nuevo_reg.cantidad = cantidad;
     nuevo_reg.bandeja = bandeja;
 
@@ -46,7 +49,7 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
 
     // accede a la memoria compartida
     // posición inicial
-    char *dir = mem_el.abrir_memoria(n);
+    char *dir = man_mem.abrir_memoria(n);
     bool insertado = false;
 
     struct header *pHeader = (struct header *)dir;
@@ -82,7 +85,7 @@ vector<int> Reg::agregar(string n, int bandeja, string tipo, int cantidad, vecto
         {
             pRegistro->bandeja = nuevo_reg.bandeja;
             pRegistro->id = nuevo_reg.id;
-            strcpy(pRegistro->tipo , nuevo_reg.tipo);
+            pRegistro->tipo = nuevo_reg.tipo;
             pRegistro->cantidad = nuevo_reg.cantidad;
             sem_post(arrayMut);
             sem_post(arrayLleno);

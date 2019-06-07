@@ -4,9 +4,8 @@
 
 using namespace std;
 
-class Memory_Elements {
+class Elements {
     public:
-    char* abrir_memoria(string n);
     int generar_id();
 };
 
@@ -25,7 +24,7 @@ struct header {
 struct registroentrada {
   int bandeja;
   int id;
-  char tipo[1];
+  char tipo;
   int cantidad;
 };
 
@@ -33,6 +32,6 @@ struct registroentrada {
 // interno -> anonimo
 struct registrosalida{
   int id;
-  char tipo[1];
+  char tipo;
   int cantidad;
 };
