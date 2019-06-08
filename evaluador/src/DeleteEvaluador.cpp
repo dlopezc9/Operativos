@@ -12,26 +12,33 @@
 #include "AbrirSemaforos.cpp"
 using namespace std;
 
-int
-main(void) {
+int main(void)
+{
   string nombre = "buffer";
   char *dir = abrirMemoria(nombre);
-  struct header *pHeader = (struct header *) dir;
-  
-    int i  = pHeader->i;
+  struct header *pHeader = (struct header *)dir;
+
+  int i = pHeader->i;
 
   int h = 0;
-  string mut = "Mut";
-  string llen = "LLen";
-  string vac = "Vac";
-
+  int totalsems = 4 + i;
+  string mut = "Mut" + nombre;
+  string llen = "Lleno" + nombre;
+  string vac = "Vacio" + nombre;
+  string reactivo = "Reactivo" + nombre;
+  string nombreq = nombre + "Q";
   sem_unlink("vacios");
   sem_unlink("llenos");
   sem_unlink("mutex");
+  sem_unlink(((reactivo + "0")).c_str());
+  sem_unlink(((reactivo + "1")).c_str());
+  sem_unlink(((reactivo + "2")).c_str());
   shm_unlink("/buffer");
+  shm_unlink(nombreq.c_str());
 
-  while(h < i){ 
-    
+  while (h < totalsems)
+  {
+
     ostringstream namemut;
     namemut << mut << h;
     string realNameMut(namemut.str());
@@ -41,7 +48,7 @@ main(void) {
     namellen << llen << h;
     string realNameLlen(namellen.str());
     sem_unlink(realNameLlen.c_str());
-    
+
     ostringstream namevac;
     namevac << vac << h;
     string realNameVac(namevac.str());
