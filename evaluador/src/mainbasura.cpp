@@ -1,56 +1,74 @@
 #include "IniciadorMemoria.cpp"
-#include "ingresoelemento.cpp"
+#include "manejoBandejaEntrada.cpp"
 #include "AbrirSemaforos.cpp"
-#include "retirarElemento.cpp"
-#include "retiroBandejaQ.cpp"
-#include "BandejasQ.cpp"
+//#include "retirarElemento.cpp"
+#include "manejoQ.cpp"
 #include "abrirHilo.cpp"
+#include "manejoOE.cpp"
 using namespace std;
 
 int main()
 {
-    string nombre = "buffer";
-    int i = 3;
-    int ie = 5;
+    string nombre = "evaluator";
+    int i = 5;
+    int ie = 6;
     int oe = 10;
-    int q = 5;
-    int b = 5;
-    int d = 5;
-    int s = 5;
+    int q = 6;
+    int b = 100;
+    int d = 100;
+    int s = 100;
 
+    cout << "Inicio" << endl;
+
+    // init
     crearEspacio(nombre, i, ie, oe, q, b, d, s);
     crearSemaforo(nombre);
-    struct registroentrada test;
-    test.bandeja = 0;
-    test.cantidad = 3;
-    test.id = 8;
-    test.tipo = 'D';
-
-    struct registroentrada test2;
-    test2.bandeja = 2;
-    test2.cantidad = 3;
-    test2.id = 5;
-    test2.tipo = 'D';
-    //Holo
-    struct registrosalida testsalida1;
-    testsalida1.cantidad = 3;
-    testsalida1.id = 99;
-    testsalida1.tipo = 'D';
-    ingresarRegistro(test, nombre);
-    ingresarRegistro(test2, nombre);
     crearQ(nombre);
-
-    recorrer(nombre);
     crearHilo(nombre);
+    crearHiloProcesadores(nombre);
+
+
+    // reg
+    registroentrada testD;
+    testD.bandeja = 0;
+    testD.cantidad = 1;
+    testD.id = 1;
+    testD.tipo = 'S';
+    registroentrada testB;
+    testB.bandeja = 1;
+    testB.cantidad = 10;
+    testB.id = 2;
+    testB.tipo = 'S';
+
+    registroentrada testS;
+    testS.bandeja = 2;
+    testS.cantidad = 2;
+    testS.id = 3;
+    testS.tipo = 'S';
+
+    ImprimirReactivo(nombre);
+
+    //ingresarRegistro(testD, nombre);
+    ingresarRegistro(testB, nombre);
+    //ingresarRegistro(testS, nombre);
+ 
+    IngresarReactivo(nombre, 100, 'S');
+    ImprimirReactivo(nombre);
+     cout <<endl;
+     
+    ingresarRegistro(testB, nombre);
+    ImprimirReactivo(nombre);
+     cout <<endl;
+    ingresarRegistro(testB, nombre);
+    ImprimirReactivo(nombre);
+    
+    sleep(5);
     cout << "" << endl;
+    cout << " Bandejas OE Resultado" << endl;
     cout << "" << endl;
-    sleep(1);
-    recorrerQ(nombre);
-    retirarRegistroDeQ('D',nombre);
-    cout << "" << endl;
-    cout << "" << endl;
-    sleep(1);
-    recorrerQ(nombre);
+    recorrerOE(nombre);
+    //IngresarReactivo(nombre, 100, 'B');
+    ImprimirReactivo(nombre);
 
     return 0;
 }
