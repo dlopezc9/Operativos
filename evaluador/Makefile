@@ -1,7 +1,7 @@
 LDFLAGS=-lrt -pthread
 SRCDIR=src
 BINDIR=bin
-evaluator: ${SRCDIR}/evaluador.o ${SRCDIR}/init.o ${SRCDIR}/reg.o ${SRCDIR}/ctrl.o ${SRCDIR}/rep.o ${SRCDIR}/parser.o ${SRCDIR}/stop.o ${SRCDIR}/elements.o ${SRCDIR}/manejador_mem.o ${BINDIR}/manejador_sem.o ${BINDIR}/manejador_hil.o
+evaluator: ${SRCDIR}/evaluador.o ${SRCDIR}/init.o ${SRCDIR}/reg.o ${SRCDIR}/ctrl.o ${SRCDIR}/rep.o ${SRCDIR}/parser.o ${SRCDIR}/stop.o ${SRCDIR}/elements.o ${SRCDIR}/manejador_mem.o ${SRCDIR}/manejador_sem.o ${SRCDIR}/manejador_hil.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 ${SRCDIR}/evaluador.o: ${SRCDIR}/evaluador.cpp ${SRCDIR}/init.h ${SRCDIR}/reg.h ${SRCDIR}/ctrl.h ${SRCDIR}/rep.h ${SRCDIR}/elements.h ${SRCDIR}/stop.h
