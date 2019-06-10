@@ -107,7 +107,7 @@ void Manejador_Hil::crearHiloProcesadores(string n)
 
     // Instancia los elementos que van a hacer parte de los hilos
     // Instancia el arreglo de los hilos.
-    pthread_t hiloQ[q];
+    pthread_t hiloQ[3];
     banPros bande;
     bande.nombre = n;
     char tipoPros = 'B';

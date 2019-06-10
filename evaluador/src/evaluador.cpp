@@ -5,6 +5,10 @@
 #include <iterator>
 #include <algorithm>
 #include <bits/stdc++.h>
+#include <thread>
+#include <chrono>
+#include <mutex>
+#include <condition_variable>
 #include <algorithm>
 #include <vector> 
 #include "parser.h"
@@ -182,8 +186,6 @@ int main(int argc, char* argv[])
             {
                 cout << ">";
                 getline(cin, user_input);
-                cout << "El usuario ingreso: ";
-                cout << user_input << endl;
 
                 if(user_input == "exit"){
                     listen = false;
@@ -201,7 +203,6 @@ int main(int argc, char* argv[])
                    repetido = find(begin(id_existentes), end(id_existentes), id) != end(id_existentes);
 
                    if (!repetido){
-                    cout << "Es unico" << endl;
                     id_existentes.insert(begin(id_existentes), id);
                     ciclar = false;
                    }
@@ -228,7 +229,6 @@ int main(int argc, char* argv[])
             // Forma estandar de recibir lineas de texto de un fichero.
             for(string line; getline(file, line); )
             {
-                cout << line << endl;
 
                 // Se parsea el input del fichero.
                 string *args = parser.parser(line);
@@ -244,7 +244,6 @@ int main(int argc, char* argv[])
                    repetido = find(begin(id_existentes), end(id_existentes), id) != end(id_existentes);
 
                    if (!repetido){
-                    cout << "Es unico" << endl;
                     id_existentes.insert(begin(id_existentes), id);
                     ciclar = false;
                    }
@@ -310,6 +309,8 @@ int main(int argc, char* argv[])
 
         registroentrada registro;       
         int id;
+        condition_variable cv;
+        int value;
         bool listen = true;
         bool ciclar = true;
         bool repetido;
@@ -327,17 +328,15 @@ int main(int argc, char* argv[])
 
         // Revisa si el comando '-i' y manda al metodo mensajei junto con la cantidad de segundos.
         if(!strcmp(argv[4], "-i")){
-            rep.mensajei(memory_name, stoi(argv[5]));
 
-        // Revisa si el comando '-m' y manda al metodo mensajej junto con la cantidad de examenes.
-        } else if(!strcmp(argv[4], "-m")){
+            double time = (double)stoi(argv[5]) * 1000;
 
-            while(man_mem.retornarContador(memory_name) != stoi(argv[5]))
-            {
+	        auto Start = std::chrono::high_resolution_clock::now();
+	        while (1)
+	        {
+	            
                 cout << ">";
                 getline(cin, user_input);
-                cout << "El usuario ingreso: ";
-                cout << user_input << endl;
 
                 if(user_input == "exit"){
                     listen = false;
@@ -355,7 +354,50 @@ int main(int argc, char* argv[])
                    repetido = find(begin(id_existentes), end(id_existentes), id) != end(id_existentes);
 
                    if (!repetido){
-                    cout << "Es unico" << endl;
+                    id_existentes.insert(begin(id_existentes), id);
+                    ciclar = false;
+                   }
+                }
+
+                registro.id = id;
+                reg.agregar(registro, memory_name);  
+
+
+		        auto End = std::chrono::high_resolution_clock::now();
+		        std::chrono::duration<double, std::milli> Elapsed = End - Start;
+		        if (Elapsed.count() >= time)
+			        break;
+	        }
+
+            rep.mensajei(memory_name, stoi(argv[5]));
+
+
+
+
+        // Revisa si el comando '-m' y manda al metodo mensajej junto con la cantidad de examenes.
+        } else if(!strcmp(argv[4], "-m")){
+
+            while(man_mem.retornarContador(memory_name) != stoi(argv[5]))
+            {
+                cout << ">";
+                getline(cin, user_input);
+
+                if(user_input == "exit"){
+                    listen = false;
+                }
+
+                // Se parsea el input del usuario.
+                string *parsed_user_input = parser.parser(user_input);
+
+                registro.bandeja = stoi(parsed_user_input[0]);
+                registro.tipo = parsed_user_input[1][0];
+                registro.cantidad = stoi(parsed_user_input[2]);
+
+                while(ciclar){        
+                   id = rand() % ((10000 + 1) - 1);
+                   repetido = find(begin(id_existentes), end(id_existentes), id) != end(id_existentes);
+
+                   if (!repetido){
                     id_existentes.insert(begin(id_existentes), id);
                     ciclar = false;
                    }

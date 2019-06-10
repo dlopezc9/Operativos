@@ -510,6 +510,8 @@ registrosalida Manejador_Mem::retirarRegistroDeQ(char tipo, string n)
         //si encuentro elemento a retirar
         if (pRegistro->cantidad > 0)
         {
+            char* dirQ2 = man_mem.abrir_memoriaQ(n);
+            headerQ *pHeaderQ2 = (headerQ *)dirQ2;
 
             //GENERACION del costo en reativo según tipo
             int costo;
@@ -526,32 +528,29 @@ registrosalida Manejador_Mem::retirarRegistroDeQ(char tipo, string n)
             // Si es tipo B, Si no tengo suficiente reactivo libero el mutex y lo espero de nuevo
             if (tipodelregistro == 'B')
             {
-                while (pHeaderQ->b < costo)
+                while (pHeaderQ2->b < costo)
                 {
-                    sem_post(arrayMut);
-                    sem_wait(arrayMut);
+                    sem_wait(arrayReact);
                 }
-                pHeaderQ->b -= costo;
+                pHeaderQ2->b -= costo;
             }
             // Si es tipo D, Si no tengo suficiente reactivo libero el mutex y lo espero de nuevo
             if (tipodelregistro == 'D')
             {
-                while (pHeaderQ->d < costo)
+                while (pHeaderQ2->d < costo)
                 {
-                    sem_post(arrayMut);
-                    sem_wait(arrayMut);
+                    sem_wait(arrayReact);
                 }
-                pHeaderQ->d -= costo;
+                pHeaderQ2->d -= costo;
             }
             // Si es tipo S, Si no tengo suficiente reactivo libero el mutex y lo espero de nuevo
             if (tipodelregistro == 'S')
             {
-                while (pHeaderQ->s < costo)
+                while (pHeaderQ2->s < costo)
                 {
-                    sem_post(arrayMut);
-                    sem_wait(arrayMut);
+                    sem_wait(arrayReact);
                 }
-                pHeaderQ->s -= costo;
+                pHeaderQ2->s -= costo;
             }
             
 
@@ -565,17 +564,16 @@ registrosalida Manejador_Mem::retirarRegistroDeQ(char tipo, string n)
         //Pongo basura donde estaba
         //pRegistro->bandeja = bandeja;
         pRegistro->id = 0;
-        pRegistro->tipo = 'a';
+        pRegistro->tipo = '0';
         pRegistro->cantidad = 0;
         pRegistro->bandeja = 0;
         pRegistro->time = 0;
         sem_post(arrayMut);
         sem_post(arrayVacio);
+        
 
         return registro;
-        }
-        else
-        {
+        } else {
         recorrido++;
         }
         
@@ -694,19 +692,19 @@ int Manejador_Mem::IngresarReactivo(string nombre, int cantidad, char tipo)
     int s = pHeaderQ->s;
     int i = pHeaderQ->i;
 
-    sem_t *arrayMut;
+    sem_t *arrayReact;
     int pos_tipo;
-    int pos_bandejaQ;
-    if (tipo == 'B')
-        pos_tipo = i;
-    if (tipo == 'D')
-        pos_tipo = i+1;
-    if (tipo == 'S')
-        pos_tipo = i+2;
-    string mutex = "Mut" + nombre + to_string(pos_tipo);
-    arrayMut = sem_open(mutex.c_str(), 0);
 
-    sem_wait(arrayMut);
+    if (tipo == 'B')
+        pos_tipo = 0;
+    if (tipo == 'D')
+        pos_tipo = 1;
+    if (tipo == 'S')
+        pos_tipo = 2;
+
+    string reactivo = "Reactivo" + nombre + to_string(pos_tipo);
+    arrayReact = sem_open(reactivo.c_str(), 0);
+
     if (tipo == 'B')
     {
         pHeaderQ->b += cantidad;
@@ -719,7 +717,7 @@ int Manejador_Mem::IngresarReactivo(string nombre, int cantidad, char tipo)
     {
         pHeaderQ->s += cantidad;
     }
-    sem_post(arrayMut);
+    sem_post(arrayReact);
 
     return 0;
 }
@@ -731,9 +729,13 @@ int Manejador_Mem::ImprimirReactivo(string nombre)
     char *dirQ = man_mem.abrir_memoriaQ(nombre);
     headerQ *pHeaderQ = (headerQ *)dirQ;
 
-    cout << "Tenemos " << pHeaderQ->b << " de reactivo B" << endl;
-    cout << "Tenemos " << pHeaderQ->d << " de reactivo D" << endl;
-    cout << "Tenemos " << pHeaderQ->s << " de reactivo S" << endl;
+    int b = pHeaderQ->b;
+    int d = pHeaderQ->d;
+    int s = pHeaderQ->s;
+
+    cout << "Tenemos " << b << " de reactivo B" << endl;
+    cout << "Tenemos " << d << " de reactivo D" << endl;
+    cout << "Tenemos " << s << " de reactivo S" << endl;
     
     return 0;
 }
