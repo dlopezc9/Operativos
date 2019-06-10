@@ -423,6 +423,9 @@ int Manejador_Mem::ingresarBandejaQ(registrosalida registro, string n)
             pRegistroSalida->id = registro.id;
             pRegistroSalida->tipo = registro.tipo;
             pRegistroSalida->cantidad = registro.cantidad;
+            pRegistroSalida->bandeja = registro.bandeja;
+            pRegistroSalida->time = registro.time;
+            
             sem_post(arrayMut);
             sem_post(arrayLleno);
             return EXIT_SUCCESS;

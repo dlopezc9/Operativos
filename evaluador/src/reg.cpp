@@ -41,9 +41,6 @@ int Reg::agregar(registroentrada registro, string nombre)
   
   // variable para recorrer la bandeja
   int recorrido = 0;
-  //Semaforos
-  // int posSem = i;
-  // string s = to_string(posSem);
 
   // posición inicial de la bandeja i
   char *pos = (registro.bandeja * ie * sizeof(registroentrada)) + dir + sizeof(header);
@@ -68,6 +65,7 @@ int Reg::agregar(registroentrada registro, string nombre)
       pRegistro->id = registro.id;
       pRegistro->tipo = registro.tipo;
       pRegistro->cantidad = registro.cantidad;
+      pRegistro->time = rand() % ((10 - 1) + 1);
       pHeader->contador = pHeader->contador + 1;
 
       //Soy productor
