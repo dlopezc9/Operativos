@@ -517,7 +517,7 @@ registrosalida Manejador_Mem::retirarRegistroDeQ(char tipo, string n)
             headerQ *pHeaderQ2 = (headerQ *)dirQ2;
 
             //GENERACION del costo en reativo según tipo
-            int costo;
+            int costo = 0;
             char tipodelregistro = pRegistro->tipo;
             for (int f = 0; f < pRegistro->cantidad; ++f)
             {
