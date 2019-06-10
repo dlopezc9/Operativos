@@ -1,6 +1,7 @@
 LDFLAGS=-lrt -pthread
 SRCDIR=src
-${SRCDIR}/evaluator: ${SRCDIR}/evaluador.o ${SRCDIR}/init.o ${SRCDIR}/reg.o ${SRCDIR}/ctrl.o ${SRCDIR}/rep.o ${SRCDIR}/parser.o ${SRCDIR}/stop.o ${SRCDIR}/elements.o ${SRCDIR}/manejador_mem.o ${SRCDIR}/manejador_sem.o ${SRCDIR}/manejador_hil.o
+BINDIR=bin
+evaluator: ${SRCDIR}/evaluador.o ${SRCDIR}/init.o ${SRCDIR}/reg.o ${SRCDIR}/ctrl.o ${SRCDIR}/rep.o ${SRCDIR}/parser.o ${SRCDIR}/stop.o ${SRCDIR}/elements.o ${SRCDIR}/manejador_mem.o ${SRCDIR}/manejador_sem.o ${SRCDIR}/manejador_hil.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 ${SRCDIR}/evaluador.o: ${SRCDIR}/evaluador.cpp ${SRCDIR}/init.h ${SRCDIR}/reg.h ${SRCDIR}/ctrl.h ${SRCDIR}/rep.h ${SRCDIR}/elements.h ${SRCDIR}/stop.h
@@ -29,4 +30,7 @@ clean:
 	rm -f ${SRCDIR}/*.o
 	rm -f ${SRCDIR}/.~ *~
 	rm -f ${SRCDIR}/evaluador
+	rm -f ${SRCDIR}/evaluador.exe
+	rm -f ./evaluador.exe
+
 	

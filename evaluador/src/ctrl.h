@@ -11,6 +11,6 @@ using namespace std;
 
 class Ctrl {
     public:
-    void update(string n, string tipo, int carga);
+    void update(string n, int cantidad, char tipo);
     void list(string n, string subcomando);
 };

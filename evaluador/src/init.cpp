@@ -26,7 +26,7 @@ int Init::init(int i, int ie, int oe, string n, int b, int d, int s, int q){
 
     // Se empieza el set up de todo el programa
 
-    // Se crea la memoria
+    // Se crea la memoria y la bandeja de salida.
     man_mem.crear_mem(i, ie, oe, n, b, d, s, q);
 
     // Se mapea la memoria.
@@ -40,16 +40,29 @@ int Init::init(int i, int ie, int oe, string n, int b, int d, int s, int q){
     
     cout << "Se crearon los semaforos con exito" << endl;
 
+    // Inicia la creacion de las bandejas B, D, S
+
+    man_mem.crear_memQ(n);
+
+    cout << "Bandejas B, D, S listas" << endl;
+    
     // Inicia los hilos
 
-    man_hil.crear_hil(i, n);
+    man_hil.crear_hil(n);
 
     cout << "Hilos instanciados con exito" << endl;
 
-    //    while(true)
-    //    {
+
+    // Iniciar la creacion de los procesadoresOE
+
+    man_hil.crearHiloProcesadores(n);
+
+    cout << "Hilos de los procesadores estan listos" << endl;
+
+        while(true)
+        {
             //Este ciclo se descomenta cuando sepamos que hace el init mientras bloquea la consola
-    //    }    
+        }    
 
   return EXIT_SUCCESS;
 

@@ -34,6 +34,9 @@ void Stop::stop(string n)
   n = "/" + n;
   shm_unlink(n.c_str());
 
+  n = n + "Q";
+  shm_unlink(n.c_str());
+  
   for (int h = 0; h < totalsems; ++h)
   {
     ostringstream namemut;
@@ -52,7 +55,7 @@ void Stop::stop(string n)
     sem_unlink(realNameVac.c_str());
   }
 
-  cout << "Cerrando memoria " << n << endl;
 
+  cout << "Cerrando memoria" << endl;
   return;
 }

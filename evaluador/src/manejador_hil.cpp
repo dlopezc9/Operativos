@@ -19,27 +19,32 @@ using namespace std;
 void* procesador(void *bandej)
 {
     Manejador_Mem man_mem;
-    Manejador_Hil man_hil;
-    banNam *producto = (banNam *)bandej;
+
+    banHilo *producto = (banHilo *)bandej;
     int num_bandeja = producto->bandeja;
-    string nom_bandeja = producto->nombre;
-    int ex;
+    string nom_memoria = producto->nombre;
 
     for (;;)
     {
-        registrosalida registro = man_mem.retirar_reg(num_bandeja, nom_bandeja);
-        ex = man_hil.ingresarBandejaQ(registro, nom_bandeja);
+        registrosalida registro = man_mem.retirar_reg(num_bandeja, nom_memoria);
+        man_mem.ingresarBandejaQ(registro, nom_memoria);
     }
  
     pthread_exit(NULL);
 }
 
-void Manejador_Hil::crear_hil(int i, string n){
+void Manejador_Hil::crear_hil(string n){
     
+    Manejador_Mem man_mem;
+
+    char *dir = man_mem.abrir_memoria(n);
+    header *pHeader = (header *)dir;
+    int i = pHeader->i; 
+
     // Instancia los elementos que van a hacer parte de los hilos
     // Instancia el arreglo de los hilos.
     pthread_t hiloP[i];
-    banNam bande;
+    banHilo bande;
     bande.nombre = n;
     string n_Hilo = "Hilo" + n;
 
@@ -54,93 +59,72 @@ void Manejador_Hil::crear_hil(int i, string n){
         sleep(0.1);
         
     }
-
-    //ESTO SE BORRA, SE DEJA AHORA POR DEBUGGER
-    if (pthread_join(hiloP[0], NULL))
-    {
-        fprintf(stderr, "Error joining thread\n");
+/*
+    if (pthread_join(hiloP[0], NULL)){
+        fprintf(stderr, "lo que sea\n");
         return;
     }
-
+*/
     return;
 }
 
-int Manejador_Hil::ingresarBandejaQ(struct registrosalida registro, string n)
+void *procesadorOE(void *bandej)
 {
     Manejador_Mem man_mem;
+    Elements element;
 
+    banPros *producto = (banPros *)bandej;
+    char tipo = producto->tipo;
+    string nom_memoria2 = producto->nombre;
+    int val;
+
+    for (;;)
+    {   
+        registrosalida registro = man_mem.retirarRegistroDeQ(tipo, nom_memoria2);
+        val = element.generar_resultado();
+
+        if (0 < val && val < 16) registro.resultado = '-';
+        else if (15 < val && val < 36) registro.resultado = 'N';
+        else if (35 < val && val < 51) registro.resultado = 'P';
+        sleep(5);
+
+        man_mem.ingresarSalida(registro, nom_memoria2);
+    }
+
+    pthread_exit(NULL);
+}
+
+void Manejador_Hil::crearHiloProcesadores(string n)
+{
+    Manejador_Mem man_mem;
     //accede a la memoria compartida
     // posición inicial
-    char *dir = man_mem.abrir_memoria(n);
-    struct header *pHeader = (struct header *)dir;
-    int i = pHeader->i;
-
-    //Llama los 3 semaforo requeridos, mutex, vacio lleno para el productor consumidor
-    sem_t *arrayMut, *arrayVacio, *arrayLleno;
-    int tipopipo;
-    if (registro.tipo == 'B')
-    {
-        tipopipo = i;
-    }
-    if (registro.tipo == 'D')
-    {
-        tipopipo = i + 1;
-    }
-    if (registro.tipo == 'S')
-    {
-        tipopipo = i + 2;
-    }
-    string mutex = "Mut" + n + to_string(tipopipo);
-    string vacio = "Vacio" + n + to_string(tipopipo);
-    string lleno = "Lleno" + n + to_string(tipopipo);
-    arrayMut = sem_open(mutex.c_str(), 0);
-    arrayVacio = sem_open(vacio.c_str(), 1);
-    arrayLleno = sem_open(lleno.c_str(), 0);
-
-    //accede a la memoria compartida
-    // posición inicial
-    char *dire = man_mem.abrir_memoriaQ(n);
-
-    headerQ *pHeaderQ = (struct headerQ *)dire;
+    char *dirq = man_mem.abrir_memoriaQ(n);
+    headerQ *pHeaderQ = (headerQ *)dirq;
 
     int q = pHeaderQ->q;
+    int i = pHeaderQ->i;
 
-    // variable para recorrer la bandeja
-    int recorrido = 0;
-    //Semaforos
-    int posSem = q;
-    string s = to_string(posSem);
+    // Instancia los elementos que van a hacer parte de los hilos
+    // Instancia el arreglo de los hilos.
+    pthread_t hiloQ[q];
+    banPros bande;
+    bande.nombre = n;
+    char tipoPros = 'B';
+    string n_Hilo = "Hilo" + n;
 
-    // posición inicial de la bandeja según el tipo
-    int posBandeja = tipopipo - i;
-    char *pos = dire + sizeof(headerQ) + (posBandeja * sizeof(registrosalida) * q );
-
-    //hasta que no logre insertar intentar
-    // Espera la semaforo para insertar, vacio para saber si hay cupo y el mutex
-    sem_wait(arrayVacio);
-    sem_wait(arrayMut);
-    // ciclo que avanza dentro de una bandeja usando n, recorre bandeja
-    while (recorrido < q)
+    // Crea los hilos y les asigna la funcion
+    for (int m = 0; m < 3; ++m)
     {
-        //posición en la bandeja
-        char *posn = (pos + (recorrido * sizeof(registrosalida)));
-        struct registrosalida *pRegistroSalida = (struct registrosalida *)posn;
-        //si logra insertar se sale
-        if (pRegistroSalida->cantidad <= 0)
-        {
-            pRegistroSalida->id = registro.id;
-            pRegistroSalida->tipo = registro.tipo;
-            pRegistroSalida->cantidad = registro.cantidad;
-            sem_post(arrayMut);
-            sem_post(arrayLleno);
-            return EXIT_SUCCESS;
-        }
-        // sino sigue avanzando
-        else
-        {
-            recorrido++;
-        }
+        if(m == 1) tipoPros = 'D';
+        if(m == 2) tipoPros = 'S';
+        bande.tipo = tipoPros;
+        ostringstream namellen;
+        namellen << n_Hilo << m;
+        string realNameLlen(namellen.str());
+        pthread_create(&hiloQ[m], NULL, procesadorOE, (void *)&bande);
+        sleep(1);
     }
 
-    return 1;
+    return;
 }

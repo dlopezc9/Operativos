@@ -14,6 +14,7 @@
 #include "rep.h"
 #include "stop.h"
 #include "elements.h"
+#include "manejador_mem.h"
 
 using namespace std;
 
@@ -100,7 +101,7 @@ int main(int argc, char* argv[])
                 ++x;
 
                 // Doble restriccion de valor para D/B/S
-                if(d == 0 || d > 100){
+                if(d == 0 || d > 100  || 0 > d){
                     cout << "Valor no autorizado para d" << endl;
                     return 1;            
                 }
@@ -112,7 +113,7 @@ int main(int argc, char* argv[])
                 ++x;
 
                 // Doble restriccion de valor para D/B/S
-                if(b == 0 || b > 100){
+                if(b == 0 || b > 100 || 0 > b){
                     cout << "Valor no autorizado para b" << endl;
                     return 1;            
                 }
@@ -124,7 +125,7 @@ int main(int argc, char* argv[])
                 ++x;
 
                 // Doble restriccion de valor para D/B/S
-                if(s == 0 || s > 100){
+                if(s == 0 || s > 100 || 0 > s){
                     cout << "Valor no autorizado para s" << endl;
                     return 1;            
                 }
@@ -153,7 +154,11 @@ int main(int argc, char* argv[])
         // Si la flag -n es correcta, asigna la memoria a la varible memory_name
         // En caso contrario, cierra el programa.
         Reg reg;
+        registroentrada registro;       
+        int id;
         bool listen = true;
+        bool ciclar = true;
+        bool repetido;
         vector<int> id_existentes;
 
         if(!strcmp(argv[2], "-n"))
@@ -187,8 +192,23 @@ int main(int argc, char* argv[])
                 // Se parsea el input del usuario.
                 string *parsed_user_input = parser.parser(user_input);
 
-                // Se llama al metodo agregar para ingresar en la memoria el registro.
-                id_existentes = reg.agregar(memory_name, stoi(parsed_user_input[0]), parsed_user_input[1], stoi(parsed_user_input[2]), id_existentes);
+                registro.bandeja = stoi(parsed_user_input[0]);
+                registro.tipo = parsed_user_input[1][0];
+                registro.cantidad = stoi(parsed_user_input[2]);
+
+                while(ciclar){        
+                   id = rand() % ((10000 + 1) - 1);
+                   repetido = find(begin(id_existentes), end(id_existentes), id) != end(id_existentes);
+
+                   if (!repetido){
+                    cout << "Es unico" << endl;
+                    id_existentes.insert(begin(id_existentes), id);
+                    ciclar = false;
+                   }
+                }
+
+                registro.id = id;
+                reg.agregar(registro, memory_name);  
 
             }
 
@@ -214,7 +234,24 @@ int main(int argc, char* argv[])
                 string *args = parser.parser(line);
 
                 // Se llama al metodo agregar para ingresar en la memoria el registro.
-                id_existentes = reg.agregar(memory_name, stoi(args[0]), args[1], stoi(args[2]), id_existentes);            
+                registro.bandeja = stoi(args[0]);
+                registro.tipo = args[1][0];
+                registro.cantidad = stoi(args[2]);
+                         
+
+                while(ciclar){        
+                   id = rand() % ((10000 + 1) - 1);
+                   repetido = find(begin(id_existentes), end(id_existentes), id) != end(id_existentes);
+
+                   if (!repetido){
+                    cout << "Es unico" << endl;
+                    id_existentes.insert(begin(id_existentes), id);
+                    ciclar = false;
+                   }
+                }
+
+                registro.id = id;
+                reg.agregar(registro, memory_name);            
 
             }
         }
@@ -255,10 +292,10 @@ int main(int argc, char* argv[])
 
             // Si el comando es 'update', asigna las siguientes variables y las manda al metodo update.
             } else if(second_input[0] == "update"){
-                string tipo = second_input[1];
+                char tipo = second_input[1][0];
                 int valor = stoi(second_input[2].c_str());
 
-                ctrl.update(memory_name, tipo, valor);
+                ctrl.update(memory_name, valor, tipo );
             } 
         }
 
@@ -268,6 +305,16 @@ int main(int argc, char* argv[])
         // Crea un objeto rep. Si la flag -n es correcta, asigna la memoria a la varible memory_name
         // En caso contrario, cierra el programa.
         Rep rep;
+        Reg reg;
+        Manejador_Mem man_mem;
+
+        registroentrada registro;       
+        int id;
+        bool listen = true;
+        bool ciclar = true;
+        bool repetido;
+        string user_input;
+        vector<int> id_existentes;
 
         if(!strcmp(argv[2], "-n"))
         {
@@ -284,7 +331,40 @@ int main(int argc, char* argv[])
 
         // Revisa si el comando '-m' y manda al metodo mensajej junto con la cantidad de examenes.
         } else if(!strcmp(argv[4], "-m")){
-            rep.mensajej(memory_name, stoi(argv[5]));
+
+            while(man_mem.retornarContador(memory_name) != stoi(argv[5]))
+            {
+                cout << ">";
+                getline(cin, user_input);
+                cout << "El usuario ingreso: ";
+                cout << user_input << endl;
+
+                if(user_input == "exit"){
+                    listen = false;
+                }
+
+                // Se parsea el input del usuario.
+                string *parsed_user_input = parser.parser(user_input);
+
+                registro.bandeja = stoi(parsed_user_input[0]);
+                registro.tipo = parsed_user_input[1][0];
+                registro.cantidad = stoi(parsed_user_input[2]);
+
+                while(ciclar){        
+                   id = rand() % ((10000 + 1) - 1);
+                   repetido = find(begin(id_existentes), end(id_existentes), id) != end(id_existentes);
+
+                   if (!repetido){
+                    cout << "Es unico" << endl;
+                    id_existentes.insert(begin(id_existentes), id);
+                    ciclar = false;
+                   }
+                }
+
+                registro.id = id;
+                reg.agregar(registro, memory_name);  
+
+            }
         }
 
     // Revisa si el comando principal es stop.

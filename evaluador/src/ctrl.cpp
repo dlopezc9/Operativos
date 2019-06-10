@@ -6,6 +6,7 @@
 #include <sstream>
 #include "ctrl.h"
 #include "elements.h"
+#include "manejador_mem.h"
 
 using namespace std;
 
@@ -13,8 +14,11 @@ using namespace std;
 // n = nombre de la memoria
 // tipo = {B|D|S}
 // carga = la carga a potenciar
-void Ctrl::update(string n, string tipo, int carga)
+void Ctrl::update(string n, int cantidad, char tipo)
 {
+
+  Manejador_Mem man_men;
+  man_men.IngresarReactivo(n, cantidad, tipo);
 
   return;
 }
@@ -25,16 +29,38 @@ void Ctrl::update(string n, string tipo, int carga)
 // subcomando = subcomando deseado
 void Ctrl::list(string n, string subcomando){
 
+  Manejador_Mem man_mem;
+
   if(subcomando == "processing"){
-    cout << "Eligio processing" << endl;
+
+    cout << "Processing:" << endl;
+    man_mem.recorrerQ(n);
+
   } else if(subcomando == "waiting"){
-    cout << "Eligio waiting" << endl;
+
+    cout << "Waiting: " << endl;
+    man_mem.recorrer_mem(n);
+
+
   } else if(subcomando == "reported"){
-    cout << "Eligio reported" << endl;
+
+    cout << "Reported: " << endl;
+    man_mem.recorrerOE(n);
+
   } else if(subcomando == "reactive"){
-    cout << "Eligio reactive" << endl;
+
+    man_mem.ImprimirReactivo(n);
+
   } else if(subcomando == "all"){
-    cout << "Eligio all" << endl;
+
+    cout << "Processing:" << endl;
+    man_mem.recorrerQ(n);
+    cout << "Waiting: " << endl;
+    man_mem.recorrer_mem(n);
+    cout << "Reported: " << endl;
+    man_mem.recorrerOE(n);
+    int x = man_mem.retornarContador(n);    
+    
   } 
 
   return;

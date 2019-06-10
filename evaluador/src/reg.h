@@ -7,10 +7,11 @@
 #include <bits/stdc++.h>
 #include <fstream>
 #include <sstream>
+#include "elements.h"
 
 using namespace std;
 
 class Reg {
     public:
-    vector<int> agregar(string n, int bandeja, string tipo, int cantidad, vector<int> id_existentes);
+    int agregar(registroentrada registro, string memory_name);  
 };
