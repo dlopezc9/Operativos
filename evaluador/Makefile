@@ -27,7 +27,7 @@ ${SRCDIR}/stop.o: ${SRCDIR}/stop.cpp ${SRCDIR}/stop.h
 ${SRCDIR}/elements.o: ${SRCDIR}/elements.cpp ${SRCDIR}/elements.h
 
 clean:
-	rm -f ${BINDIR}/*.o
+	rm -f ${SRCDIR}/*.o
 	rm -f ${SRCDIR}/.~ *~
 	rm -f ${SRCDIR}/evaluador
 	rm -f ${SRCDIR}/evaluador.exe
