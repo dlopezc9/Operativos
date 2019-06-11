@@ -6,9 +6,9 @@ Para compilar el proyecto se debe ubicar en ./evaluador/src/ y realizar el coman
 Para la ejecucion se pueden utilizar los siguientes comandos
   ./evaluador init [-i integer] [-ie integer] [-oe integer] [-n string] [-b integer] [-d integer] [-s integer] [-q integer]
   
-  ./evaluator reg [-n string]{{filename}... | -}
+  ./evaluador reg [-n string]{{filename}... | -}
   
-  ./evaluator ctrl [-n string]
+  ./evaluador ctrl [-n string]
     > list [ processing  | waiting | reported | reactive | all ] NL
 
 Para usar como referencia:
